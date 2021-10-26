@@ -1,17 +1,24 @@
 import socket
 import threading
+# "Documents\BYUI Semester 3\Applied Programming\w07\sprint3"
 
 HEADER = 64
 PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
-DISCONNECT_MESSAGE = "disconnected"
+# DISCONNECT_MESSAGE = "disconnected"
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(ADDR)
 
-def handle_client(conn, addr):
+def send_message(msg, clients):
+    for conn in clients:
+        conn.send(msg.encode(FORMAT))
+
+
+
+def handle_client(conn, addr, clients):
     print(f"[NEW CONNECTION] {addr} connected")
 
     connected = True
@@ -20,18 +27,19 @@ def handle_client(conn, addr):
         if msg_length:
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
-            if msg == DISCONNECT_MESSAGE:
-                connected = False
             print(f"[{addr}] {msg}")
-            conn.send("Msg received".encode(FORMAT))
+            send_message(msg, clients)
+            # conn.send("Msg received".encode(FORMAT))
     conn.close()
 
 def start():
-    server.listen()
-    print(f'[LISTENING] Server is listening on {SERVER}')
+    clients = []
+    s.listen(2)
+    print(f'Server is listening on {SERVER}')
     while True:
-        conn, addr = server.accept()
-        t = threading.Thread(target=handle_client, args=(conn, addr))
+        conn, addr = s.accept()
+        clients.append(conn)
+        t = threading.Thread(target=handle_client, args=(conn, addr, clients))
         t.start()
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
