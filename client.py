@@ -1,12 +1,13 @@
 import socket
 import threading
-import arcade
+# import arcade
+# from game import Game
 
 HEADER = 64
 PORT = 5050
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "disconnected"
-SERVER = '10.49.180.111'
+SERVER = '10.244.234.58'
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,11 +28,18 @@ def receive():
         if msg:
             # msg_length = int(msg_length)
             # msg = client.recv(msg_length).decode(FORMAT)
+            
             print(msg)
 
-def game():
-    pass
+# class Game():
+#     def __init__(self):
+#         pass
 
-t = threading.Thread(target=receive)
-t.start()
-send('hello world')
+threads = []
+threads.append(threading.Thread(target=receive))
+# threads.append(threading.Thread(target=Game()))
+
+for t in threads:
+    t.start()
+
+# send('hello world')

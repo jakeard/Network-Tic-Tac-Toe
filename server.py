@@ -1,6 +1,6 @@
 import socket
 import threading
-# "Documents\BYUI Semester 3\Applied Programming\w07\sprint3"
+# cd "Documents\BYUI Semester 3\Applied Programming\w07\sprint3"
 
 HEADER = 64
 PORT = 5050
@@ -16,7 +16,8 @@ def send_message(msg, clients):
     for conn in clients:
         conn.send(msg.encode(FORMAT))
 
-
+def send_client_symbol(conn, symbol):
+    conn.send(symbol.encode(FORMAT))
 
 def handle_client(conn, addr, clients):
     print(f"[NEW CONNECTION] {addr} connected")
@@ -34,13 +35,19 @@ def handle_client(conn, addr, clients):
 
 def start():
     clients = []
+    symbols = ['X', 'O']
     s.listen(2)
     print(f'Server is listening on {SERVER}')
     while True:
         conn, addr = s.accept()
         clients.append(conn)
+        send_client_symbol(conn, symbols[0])
         t = threading.Thread(target=handle_client, args=(conn, addr, clients))
         t.start()
+        try:
+            del symbols[0]
+        except:
+            print('[ERROR] Too many players')
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 print("[STARTING] server is starting...")
