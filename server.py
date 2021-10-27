@@ -12,12 +12,13 @@ FORMAT = 'utf-8'
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(ADDR)
 
-def send_message(msg, clients):
-    for conn in clients:
-        conn.send(msg.encode(FORMAT))
+def send_message(msg, clients, conn):
+    for client in clients:
+        if client != conn:
+            client.send(msg.encode(FORMAT))
 
-def send_client_symbol(conn, symbol):
-    conn.send(symbol.encode(FORMAT))
+def send_client_start(conn, item):
+    conn.send(item.encode(FORMAT))
 
 def handle_client(conn, addr, clients):
     print(f"[NEW CONNECTION] {addr} connected")
@@ -29,19 +30,24 @@ def handle_client(conn, addr, clients):
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
             print(f"[{addr}] {msg}")
-            send_message(msg, clients)
+            send_message(msg, clients, conn)
             # conn.send("Msg received".encode(FORMAT))
     conn.close()
 
 def start():
     clients = []
-    symbols = ['X', 'O']
+    symbols = ['O', 'X']
+    turns = ['0', '1']
     s.listen(2)
     print(f'Server is listening on {SERVER}')
     while True:
         conn, addr = s.accept()
         clients.append(conn)
-        send_client_symbol(conn, symbols[0])
+        send_client_start(conn, symbols[0])
+        if len(clients) == 1:
+            send_client_start(conn, turns[0]) #switch
+        else:
+            send_client_start(conn, turns[1]) #switch
         t = threading.Thread(target=handle_client, args=(conn, addr, clients))
         t.start()
         try:
