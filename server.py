@@ -31,7 +31,6 @@ def handle_client(conn, addr, clients):
             msg = conn.recv(msg_length).decode(FORMAT)
             print(f"[{addr}] {msg}")
             send_message(msg, clients, conn)
-            # conn.send("Msg received".encode(FORMAT))
     conn.close()
 
 def start():
@@ -45,9 +44,9 @@ def start():
         clients.append(conn)
         send_client_start(conn, symbols[0])
         if len(clients) == 1:
-            send_client_start(conn, turns[0]) #switch
+            send_client_start(conn, turns[0])
         else:
-            send_client_start(conn, turns[1]) #switch
+            send_client_start(conn, turns[1])
         t = threading.Thread(target=handle_client, args=(conn, addr, clients))
         t.start()
         try:
