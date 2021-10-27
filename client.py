@@ -15,6 +15,8 @@ client.connect(ADDR)
 class Game:
     def __init__(self):
         self.positions = [x for x in range(1, 10)]
+        # self.won = None
+        # self.tie = None
     
     def set_symbol(self, symbol):
         self.symbol = symbol
@@ -31,17 +33,55 @@ class Game:
             self.get_user_input()
 
     def receive_user_input(self, spot):
-        if spot in {'1', '2', '3', '4', '5', '6', '7', '8', '9'}:
+        if spot[0] in {'1', '2', '3', '4', '5', '6', '7', '8', '9'}:
             if self.symbol == 'X':
                 self.update_board(int(spot) - 1, 'O')
             else:
                 self.update_board(int(spot) - 1, 'X')
             self.turn = True
             self.run_game()
+        else:
+            if self.symbol == 'X':
+                self.update_board(int(spot[1]) - 1, 'O')
+            else:
+                self.update_board(int(spot[1]) - 1, 'X')
+            if spot[0] == 'L':
+                self.end_win('You lose!')
+            if spot[0] == 'T':
+                self.end_tie()
 
     def pass_user_input(self, spot):
         send(spot)
         self.turn = False
+    
+    def check_winner(self, spot):
+        p = self.positions
+        for i in ['X', 'O']:
+            if (p[0] == i and ((p [1] == i and p[2] == i) or \
+                (p[3] == i and p[6] == i) or (p[4] == i and p[8] == i))) or \
+                    (p[8] == i and ((p[7] == i and p[6] == i) or \
+                        (p[5] == i and p[2] == i))) or (p[2] == i and p[4] == i and p[6] == i) or \
+                            (p[1] == i and p[4] == i and p[7] == i) or \
+                                (p[3] == i and p[4] == i and p[5] == i):
+                send(f'L{spot}')
+                self.end_win()
+        # if self.won:
+        #     send(f'L{spot}')
+        #     self.end_win()
+    
+    def check_tie(self, spot):
+        count = 0
+        for i in self.positions:
+            try:
+                int(i)
+            except:
+                count += 1
+        if count == 9:
+            send(f'T{spot}')
+            self.end_tie()
+        # if self.tie:
+        #     send(f'T{spot}')
+        #     self.end_tie()
 
     def show_board(self):
         print(f'\n {self.positions[0]} | {self.positions[1]} | {self.positions[2]} ')
@@ -69,9 +109,22 @@ class Game:
                     finished = True
             except:
                 print('Not a valid number!')
+        self.check_winner(str(spot))
+        self.check_tie(str(spot))
         self.pass_user_input(str(spot))
-
-
+        
+    def end_win(self, msg=None):
+        if msg is not None:
+            print(f'\n{msg}')
+        else:
+            print('You win!')
+        send(DISCONNECT_MESSAGE)
+        quit()
+    
+    def end_tie(self):
+        print('\nIt was a tie!')
+        send(DISCONNECT_MESSAGE)
+        quit()
 
 
 def start_game(game):

@@ -7,7 +7,7 @@ PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
-# DISCONNECT_MESSAGE = "disconnected"
+DISCONNECT_MESSAGE = "disconnected"
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(ADDR)
@@ -29,8 +29,11 @@ def handle_client(conn, addr, clients):
         if msg_length:
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
+            if msg == DISCONNECT_MESSAGE:
+                connected = False
             print(f"[{addr}] {msg}")
-            send_message(msg, clients, conn)
+            if connected:
+                send_message(msg, clients, conn)
     conn.close()
 
 def start():
