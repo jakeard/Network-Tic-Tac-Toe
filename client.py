@@ -5,7 +5,7 @@ HEADER = 64
 PORT = 5050
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "disconnected"
-SERVER = '10.15.58.151'
+SERVER = ''
 ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,8 +15,6 @@ client.connect(ADDR)
 class Game:
     def __init__(self):
         self.positions = [x for x in range(1, 10)]
-        # self.won = None
-        # self.tie = None
     
     def set_symbol(self, symbol):
         self.symbol = symbol
@@ -65,9 +63,6 @@ class Game:
                                 (p[3] == i and p[4] == i and p[5] == i):
                 send(f'L{spot}')
                 self.end_win()
-        # if self.won:
-        #     send(f'L{spot}')
-        #     self.end_win()
     
     def check_tie(self, spot):
         count = 0
@@ -79,9 +74,6 @@ class Game:
         if count == 9:
             send(f'T{spot}')
             self.end_tie()
-        # if self.tie:
-        #     send(f'T{spot}')
-        #     self.end_tie()
 
     def show_board(self):
         print(f'\n {self.positions[0]} | {self.positions[1]} | {self.positions[2]} ')
