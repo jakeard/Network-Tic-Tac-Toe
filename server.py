@@ -2,6 +2,7 @@ import socket
 import threading
 # cd "Documents\BYUI Semester 3\Applied Programming\w07\sprint3"
 
+# set starting details to make connection and decode messages
 HEADER = 64
 PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
@@ -9,18 +10,22 @@ ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "disconnected"
 
+# start and bind server socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(ADDR)
 
 def send_message(msg, clients, conn):
+    # sends message to client that it did not receive the message from
     for client in clients:
         if client != conn:
             client.send(msg.encode(FORMAT))
 
 def send_client_start(conn, item):
+    # sends clients their starting information (X or O, who's turn is first)
     conn.send(item.encode(FORMAT))
 
 def handle_client(conn, addr, clients):
+    # receives messsages from clients and sends to opposite client
     print(f"[NEW CONNECTION] {addr} connected")
 
     connected = True
@@ -37,6 +42,7 @@ def handle_client(conn, addr, clients):
     conn.close()
 
 def start():
+    # beginning, waits for client connections and calls the function to send the clients their starting information
     clients = []
     symbols = ['O', 'X']
     turns = ['0', '1']
