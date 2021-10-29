@@ -6,9 +6,7 @@ This game has a server and client file. The server is started first and only on 
 
 To play, one person has to start the server by typing: **py server.py**, and then both people enter the IP provided when the server starts in the client file next to the word ***SERVER***. To start the client, both people type: **py client.py** (or client_colors.py if you are in a terminal that supports colored characters).
 
-{Provide a link to your YouTube demonstration.  It should be a 4-5 minute demo of the software running (you will need to show two pieces of software running and communicating with each other) and a walkthrough of the code.}
-
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](http://www.youtube.com/watch?v=0n4cce_Ux_o)
 
 # Network Communication
 

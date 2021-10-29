@@ -1,6 +1,5 @@
 import socket
 import threading
-# cd "Documents\BYUI Semester 3\Applied Programming\w07\sprint3"
 
 # set starting details to make connection and decode messages
 HEADER = 64
