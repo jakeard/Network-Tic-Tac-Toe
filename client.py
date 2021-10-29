@@ -50,6 +50,7 @@ class Game:
                 self.update_board(int(spot[1]) - 1, 'O')
             else:
                 self.update_board(int(spot[1]) - 1, 'X')
+            self.show_board()
             if spot[0] == 'L':
                 self.end_win('You lose!')
             if spot[0] == 'T':

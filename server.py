@@ -64,5 +64,6 @@ def start():
             print('[ERROR] Too many players')
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
+ 
 print("[STARTING] server is starting...")
 start()
