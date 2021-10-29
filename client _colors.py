@@ -61,7 +61,7 @@ class Game:
         send(spot)
         self.turn = False
     
-    # check to see if you won
+    # check to see if you won or lost, sets symbol colors
     def check_winner(self, spot=None, msg=None):
         won = False
         p = self.positions
@@ -172,6 +172,7 @@ class Game:
     # prints the current board
     def show_board(self):
         for i in range(len(self.positions)):
+            # sets symbol colors
             if self.positions[i] == 'X':
                 self.positions[i] = '\033[1;33;40mX'
             elif self.positions[i] == 'O':
