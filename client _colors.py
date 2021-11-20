@@ -6,7 +6,7 @@ HEADER = 64
 PORT = 5050
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "disconnected"
-SERVER = '' # set server to IP address provided by server when server is started
+SERVER = '192.168.56.1' # set server to IP address provided by server when server is started
 ADDR = (SERVER, PORT)
 
 # start and bind client socket 
